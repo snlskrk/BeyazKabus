@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Karakterini Seç</title>
+  <style>
+    body {
+      background-color: #111;
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 32px;
+      margin-bottom: 30px;
+    }
+
+    .karakter-alani {
+      display: flex;
+      gap: 50px;
+      margin-bottom: 20px;
+    }
+
+    .karakter {
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .karakter img {
+      width: 150px;
+      height: auto;
+      border-radius: 10px;
+      border: 3px solid transparent;
+    }
+
+    .karakter.aktif img {
+      border-color: #00ccff;
+      transform: scale(1.1);
+    }
+
+    .isim {
+      margin-top: 10px;
+      font-size: 18px;
+    }
+
+    .isim-kutusu {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: none;
+      width: 200px;
+      margin-bottom: 15px;
+      outline: none;
+    }
+
+    .devam-buton img {
+      width: 120px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .devam-buton img:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+
+<h1>Karakterini Seç</h1>
+
+<div class="karakter-alani">
+  <!-- Kadın Karakter -->
+  <div class="karakter" onclick="karakterSec(this, 'kadin.gif', 'kadin-ses.mp3')">
+    <img src="kadin.png" data-static="kadin.png" alt="Kadın">
+    <div class="isim">Kadın</div>
+  </div>
+
+  <!-- Erkek Karakter -->
+  <div class="karakter" onclick="karakterSec(this, 'erkek.gif', 'erkek-ses.mp3')">
+    <img src="erkek.png" data-static="erkek.png" alt="Erkek">
+    <div class="isim">Erkek</div>
+  </div>
+</div>
+
+<div class="isim-kutusu">
+  <input type="text" id="karakterIsmi" placeholder="Karakter Adı">
+  
+  <div class="devam-buton" onclick="devamEt()">
+    <img src="buton.png" alt="Devam Et">
+  </div>
+</div>
+
+<audio id="sesEfekti" src=""></audio>
+
+<script>
+  let secilenKarakter = null;
+
+  function karakterSec(elem, gif, ses) {
+    document.querySelectorAll('.karakter').forEach(k => {
+      k.classList.remove('aktif');
+      const img = k.querySelector('img');
+      img.src = img.getAttribute('data-static');
+    });
+
+    elem.classList.add('aktif');
+    const img = elem.querySelector('img');
+    img.src = gif;
+
+    const sesEfekti = document.getElementById("sesEfekti");
+    sesEfekti.src = ses;
+    sesEfekti.currentTime = 0;
+    sesEfekti.play();
+
+    secilenKarakter = {
+      gif: gif,
+      ses: ses
+    };
+  }
+
+  function devamEt() {
+    const isim = document.getElementById("karakterIsmi").value.trim();
+    if (!secilenKarakter) {
+      alert("Lütfen bir karakter seçin!");
+      return;
+    }
+    if (!isim) {
+      alert("Lütfen bir karakter adı girin!");
+      return;
+    }
+
+    // Bilgileri kaydet (istersen bu verileri bir sonraki sayfada kullanabilirsin)
+    localStorage.setItem("karakterGif", secilenKarakter.gif);
+    localStorage.setItem("karakterIsim", isim);
+
+    alert("Karakter seçildi: " + isim);
+    // Yönlendirme yapabilirsin burada
+    // window.location.href = "oyun.html";
+  }
+</script>
+
+</body>
+</html>
